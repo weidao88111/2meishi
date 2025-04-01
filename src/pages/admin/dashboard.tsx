@@ -45,7 +45,15 @@ export default function AdminDashboard() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       
-      <AdminLayout title="仪表板">
+      <AdminLayout 
+        title="仪表板"
+        breadcrumbs={[
+          {
+            label: "仪表板",
+            href: "/admin"
+          }
+        ]}
+      >
         {/* 统计卡片 */}
         <div className="mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

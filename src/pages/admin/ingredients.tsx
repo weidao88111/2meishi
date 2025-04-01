@@ -166,13 +166,13 @@ const AdminIngredients: React.FC = () => {
   );
   
   // 处理函数
-  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+  const handleSearch = useCallback((value: string) => {
+    setSearchTerm(value);
     setCurrentPage(1);
   }, []);
   
-  const handleCategoryChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(e.target.value);
+  const handleCategoryChange = useCallback((value: string) => {
+    setSelectedCategory(value);
     setCurrentPage(1);
   }, []);
   
@@ -253,20 +253,25 @@ const AdminIngredients: React.FC = () => {
           />
         </div>
         
-        <div className="overflow-hidden rounded-lg border border-gray-200 shadow-md">
-          <table className="w-full border-collapse bg-white text-left text-sm text-gray-500">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-4 font-medium text-gray-900">食材名称</th>
-                <th scope="col" className="px-6 py-4 font-medium text-gray-900">类别</th>
-                <th scope="col" className="px-6 py-4 font-medium text-gray-900">英文名</th>
-                <th scope="col" className="px-6 py-4 font-medium text-gray-900">季节性</th>
-                <th scope="col" className="px-6 py-4 font-medium text-gray-900">操作</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100 border-t border-gray-100">
-              {currentIngredients.length > 0 ? (
-                currentIngredients.map((ingredient) => (
+        {currentIngredients.length === 0 ? (
+          <EmptyState
+            title="暂无食材"
+            description="当前没有找到符合条件的食材"
+          />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-4 font-medium text-gray-900">食材名称</th>
+                  <th scope="col" className="px-6 py-4 font-medium text-gray-900">类别</th>
+                  <th scope="col" className="px-6 py-4 font-medium text-gray-900">英文名</th>
+                  <th scope="col" className="px-6 py-4 font-medium text-gray-900">季节性</th>
+                  <th scope="col" className="px-6 py-4 font-medium text-gray-900">操作</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 border-t border-gray-100">
+                {currentIngredients.map((ingredient) => (
                   <tr key={ingredient.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
@@ -297,29 +302,17 @@ const AdminIngredients: React.FC = () => {
                       />
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="px-6 py-4">
-                    <EmptyState message="没有找到匹配的食材" />
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        
-        {totalPages > 1 && (
-          <div className="mt-6">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={filteredIngredients.length}
-              pageSize={pageSize}
-              onPageChange={handlePageChange}
-            />
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
+        
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
         
         {/* 删除确认对话框 */}
         <ConfirmDialog

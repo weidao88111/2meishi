@@ -8,7 +8,7 @@ import FoodCard from '../../components/features/FoodCard';
 export default function RegionsPage() {
   // 将食物按地区分组
   const foodsByRegion = regions.reduce((acc, region) => {
-    acc[region.id] = foods.filter(food => food.region === region.id);
+    acc[region.id] = foods.filter(food => food.region === region.name.toLowerCase());
     return acc;
   }, {} as Record<string, typeof foods>);
 

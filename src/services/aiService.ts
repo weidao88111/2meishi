@@ -3,7 +3,7 @@
  */
 
 // Worker API 地址 - 从环境变量中获取
-const WORKER_URL = process.env.NEXT_PUBLIC_AI_WORKER_URL || 'https://your-worker-url.workers.dev';
+const WORKER_URL = process.env.NEXT_PUBLIC_AI_WORKER_URL || 'https://api.meishi.weidaoo.me';
 
 /**
  * 发送消息到AI并获取流式响应
