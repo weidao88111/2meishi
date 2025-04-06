@@ -96,32 +96,32 @@ export const recipes: Recipe[] = [
       {
         order: 1,
         description: '五花肉洗净切成5厘米见方的块，放入沸水中焯水，去除血水和杂质。',
-        image: '/images/recipes/dongpo-pork-step1.png'
+        image: '/images/recipes/dongpo/dongpo-pork-step1.png'
       },
       {
         order: 2,
         description: '锅中放油，将肉块两面煎至金黄，注意火候控制，避免煎糊。',
-        image: '/images/recipes/dongpo-pork-main.jpg'
+        image: '/images/recipes/dongpo/dongpo-pork-step2.png'
       },
       {
         order: 3,
         description: '砂锅底部铺上葱段和姜片，放入煎好的肉块，排列整齐。',
-        image: '/images/recipes/dongpo-pork-step3.png'
+        image: '/images/recipes/dongpo/dongpo-pork-step3.png'
       },
       {
         order: 4,
         description: '加入生抽、老抽、绍兴酒，加水没过肉块约2厘米，确保肉块均匀受热。',
-        image: '/images/recipes/dongpo-pork-step4.png'
+        image: '/images/recipes/dongpo/dongpo-pork-step4.png'
       },
       {
         order: 5,
         description: '放入八角、桂皮、香叶和冰糖，大火烧开后转小火，味道会更加丰富。',
-        image: '/images/recipes/dongpo-pork-step5.png'
+        image: '/images/recipes/dongpo/dongpo-pork-step5.png'
       },
       {
         order: 6,
         description: '盖上锅盖，小火炖约2.5-3小时，直至肉烂而不散，期间可以适当翻动肉块，使其入味均匀。',
-        image: '/images/recipes/dongpo-pork-main.jpg'
+        image: '/images/recipes/dongpo-pork-main.png'
       },
       {
         order: 7,
@@ -169,42 +169,42 @@ export const recipes: Recipe[] = [
       {
         order: 1,
         description: '面粉倒入盆中，慢慢加入温水，边加边搅拌，揉成光滑的面团，盖上湿布醒30分钟，这一步很关键，决定了饺子皮的筋道程度。',
-        image: '/images/recipes/dumplings-main.jpg'
+        image: '/images/recipes/dumplings-main.png'
       },
       {
         order: 2,
         description: '白菜洗净切碎，放入盆中，加入适量盐拌匀，腌制15分钟后挤干水分，这样可以去除白菜的生味，并保持馅料干爽。',
-        image: '/images/recipes/dumplings-main.jpg'
+        image: '/images/recipes/dumplings-main.png'
       },
       {
         order: 3,
         description: '猪肉馅剁细，虾仁洗净切碎，葱姜切末。将肉馅朝一个方向搅拌至起胶状，这样饺子馅会更加紧实多汁。',
-        image: '/images/recipes/dumplings-main.jpg'
+        image: '/images/recipes/dumplings-main.png'
       },
       {
         order: 4,
         description: '将猪肉馅、虾仁、白菜、葱姜末放入大盆中，加入料酒、盐、白胡椒粉、香油，朝一个方向搅拌均匀，直到馅料变得黏稠。',
-        image: '/images/recipes/dumplings-main.jpg'
+        image: '/images/recipes/dumplings-main.png'
       },
       {
         order: 5,
         description: '醒好的面团分成小剂子，擀成直径约10厘米的圆皮，中间稍厚、边缘稍薄，这样可以保证包出的饺子形状美观且不易破。',
-        image: '/images/recipes/dumplings-main.jpg'
+        image: '/images/recipes/dumplings-main.png'
       },
       {
         order: 6,
         description: '取一个饺子皮，放入适量馅料，捏紧收口成饺子形状。注意不要包入空气，否则煮饺子时容易破皮。传统的褶子可以捏出10-12个褶。',
-        image: '/images/recipes/dumplings-main.jpg'
+        image: '/images/recipes/dumplings-main.png'
       },
       {
         order: 7,
         description: '锅中烧开水，放入饺子，水再次沸腾后加入少许冷水，重复3次。这种"三沸三加水"的方法可以使饺子皮更有弹性。',
-        image: '/images/recipes/dumplings-main.jpg'
+        image: '/images/recipes/dumplings-main.png'
       },
       {
         order: 8,
         description: '饺子浮起且皮变得透明时即可捞出，蘸醋、蒜泥或酱油食用。趁热吃口感最佳，皮薄馅嫩，鲜香可口。',
-        image: '/images/recipes/dumplings-main.jpg'
+        image: '/images/recipes/dumplings-main.png'
       }
     ],
     tips: [

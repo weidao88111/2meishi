@@ -32,7 +32,7 @@ export default function DongpoPorkRecipePage() {
   const relatedFood = foods.find(food => food.id === recipe.foodId);
   
   // 获取主图片
-  const mainImage = '/images/recipes/dongpo-pork-main.jpg';
+  const mainImage = '/images/recipes/dongpo-pork-main.png';
 
   return (
     <>
