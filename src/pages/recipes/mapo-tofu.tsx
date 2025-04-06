@@ -32,7 +32,7 @@ export default function MapoTofuRecipePage() {
   const relatedFood = foods.find(food => food.id === recipe.foodId);
   
   // 获取主图片或第一个步骤图片
-  const mainImage = '/images/recipes/mapo-tofu-main.jpg';
+  const mainImage = '/images/recipes/mapo-tofu-main.png';
 
   return (
     <>
