@@ -25,7 +25,7 @@ const Section: React.FC<SectionProps> = ({
   };
 
   return (
-    <section className={`py-16 px-4 ${backgroundClasses[background]} ${className}`}>
+    <section className={`py-16 px-4 my-4 mx-2 rounded-3xl ${backgroundClasses[background]} ${className}`}>
       {withContainer ? (
         <div className="container mx-auto">
           {(title || subtitle) && (

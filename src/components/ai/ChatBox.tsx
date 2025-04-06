@@ -26,7 +26,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
   };
 
   return (
-    <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 shadow-lg">
+    <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl p-6 shadow-lg">
       <div className="flex items-center mb-4">
         <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-orange-400 flex items-center justify-center shadow-md">
           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
