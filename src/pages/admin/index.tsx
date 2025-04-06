@@ -63,7 +63,7 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ user, action, target, time,
   </div>
 );
 
-export default function Dashboard() {
+export default function Admin() {
   return (
     <>
       <Head>

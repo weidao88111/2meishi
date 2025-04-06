@@ -32,6 +32,36 @@ export const foods: Food[] = [
     relatedFoods: ['guangdong-roast-goose', 'nanjing-salted-duck', 'beijing-zhajiang-noodles']
   },
   {
+    id: 'white-cut-chicken',
+    name: '白切鸡',
+    englishName: 'White Cut Chicken',
+    region: 'guangdong',
+    category: ['经典粤菜', '鸡肉', '凉菜'],
+    description: '白切鸡是一道色香味俱全的汉族传统名菜，属于粤菜系。其特点是皮黄肉白，肉质鲜嫩，滋味清淡。',
+    history: '白切鸡起源于广东，是粤菜的代表作之一。过去在广东农村，逢年过节或待客，必杀鸡宰鹅，而白切鸡就是最基础也是最能体现粤菜"原汁原味"的烹饪方式。',
+    ingredients: ['三黄鸡', '姜', '葱', '食盐', '花生油', '香油', '料酒'],
+    cookingMethod: '选用肉质紧实的三黄鸡，宰杀后放入沸水中氽烫，捞出后涂抹一层食用油。再将鸡放入调好的盐水中，旺火煮沸后转小火慢炖，待鸡熟透后，浸泡至温热，取出斩件。蘸上姜葱蒜汁、酱油等调料食用。',
+    culturalSignificance: '白切鸡代表了粤菜"鲜、嫩、爽、滑"的特点，体现了粤菜保持食材原味的追求。它是粤菜中最能代表"清而不淡，鲜而不俗"特色的名菜之一。',
+    images: ['/images/foods/white-cut-chicken-1.png', '/images/foods/white-cut-chicken-2.png'],
+    videos: ['/videos/making-white-cut-chicken.mp4'],
+    relatedFoods: ['cantonese-roast-goose', 'steamed-fish', 'char-siu']
+  },
+  {
+    id: 'char-siu',
+    name: '蜜汁叉烧',
+    englishName: 'Char Siu (BBQ Pork)',
+    region: 'guangdong',
+    category: ['烧腊', '猪肉', '粤菜'],
+    description: '叉烧是广东省传统的烧味，以猪肉为原料，加入蜜糖、酱油等调味料烤制而成。肉质鲜嫩多汁，外表油亮红润，味道甜咸适中。',
+    history: '叉烧的历史可以追溯到南宋时期，原是祭祀用的烤肉，后逐渐成为民间美食。广东叉烧在明清时期开始兴盛，至今已有数百年历史，是粤式烧腊的代表之一。',
+    ingredients: ['猪颈肉', '蜜糖', '五香粉', '酱油', '料酒', '海鲜酱', '蒜蓉', '叉烧酱'],
+    cookingMethod: '将猪肉切成长条，用蜜糖、酱油、料酒等调料腌制数小时。烤箱预热，将肉条放在烤架上，定时翻面并刷上腌料，直至表面呈现红褐色，香气四溢。出炉后切件，撒上芝麻即可食用。',
+    culturalSignificance: '叉烧是粤菜中的经典美食，代表了粤式烹饪甜咸平衡的特点。它不仅是一道独立的菜肴，也是多种粤式美食的重要组成部分，如叉烧包、叉烧饭等。',
+    images: ['/images/foods/char-siu-1.png', '/images/foods/char-siu-2.png'],
+    videos: ['/videos/making-char-siu.mp4'],
+    relatedFoods: ['cantonese-roast-goose', 'white-cut-chicken', 'roast-pork']
+  },
+  {
     id: 'xiaolongbao',
     name: '小笼包',
     englishName: 'Xiaolongbao',

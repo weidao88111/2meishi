@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Button from '../../components/ui/Button';
@@ -8,7 +8,20 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+      if (isLoggedIn) {
+        router.push('/admin/dashboard');
+      } else {
+        setCheckingAuth(false);
+      }
+    }
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +53,15 @@ export default function AdminLogin() {
     }
   };
 
+  // If still checking auth state, show loading indicator
+  if (checkingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Head>
@@ -50,7 +72,7 @@ export default function AdminLogin() {
       
       <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
         <div className="max-w-md w-full">
-          <div className="bg-white rounded-lg shadow-md p-8">
+          <div className="bg-soft rounded-lg shadow-md p-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-800 mb-2">管理员登录</h1>
               <p className="text-gray-600">登录后台管理系统</p>

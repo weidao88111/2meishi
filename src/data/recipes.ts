@@ -100,37 +100,37 @@ export const recipes: Recipe[] = [
       },
       {
         order: 2,
-        description: '锅中放油，将肉块两面煎至金黄。',
-        image: '/images/recipes/dongpo-pork-step2.png'
+        description: '锅中放油，将肉块两面煎至金黄，注意火候控制，避免煎糊。',
+        image: '/images/recipes/dongpo-pork-main.jpg'
       },
       {
         order: 3,
-        description: '砂锅底部铺上葱段和姜片，放入煎好的肉块。',
+        description: '砂锅底部铺上葱段和姜片，放入煎好的肉块，排列整齐。',
         image: '/images/recipes/dongpo-pork-step3.png'
       },
       {
         order: 4,
-        description: '加入生抽、老抽、绍兴酒，加水没过肉块。',
+        description: '加入生抽、老抽、绍兴酒，加水没过肉块约2厘米，确保肉块均匀受热。',
         image: '/images/recipes/dongpo-pork-step4.png'
       },
       {
         order: 5,
-        description: '放入八角、桂皮、香叶和冰糖，大火烧开后转小火。',
+        description: '放入八角、桂皮、香叶和冰糖，大火烧开后转小火，味道会更加丰富。',
         image: '/images/recipes/dongpo-pork-step5.png'
       },
       {
         order: 6,
-        description: '盖上锅盖，小火炖约2.5-3小时，直至肉烂而不散。',
-        image: '/images/recipes/dongpo-pork-step6.png'
+        description: '盖上锅盖，小火炖约2.5-3小时，直至肉烂而不散，期间可以适当翻动肉块，使其入味均匀。',
+        image: '/images/recipes/dongpo-pork-main.jpg'
       },
       {
         order: 7,
-        description: '大火收汁至浓稠，注意不要煮糊。',
+        description: '大火收汁至浓稠，注意不要煮糊。收汁时可适当添加少许冰糖提香增色。',
         image: '/images/recipes/dongpo-pork-step7.png'
       },
       {
         order: 8,
-        description: '将肉块摆盘，淋上浓稠的汤汁即可。',
+        description: '将肉块摆盘，淋上浓稠的汤汁，肉质应当软烂入味，色泽红亮，味道醇厚。',
         image: '/images/recipes/dongpo-pork-step8.png'
       }
     ],
@@ -139,7 +139,8 @@ export const recipes: Recipe[] = [
       '焯水时加少许料酒可以去除腥味',
       '炖煮的时间越长越好，肉质会更加软烂',
       '最好用砂锅炖煮，这样热量分布均匀，不容易糊锅',
-      '不用盐调味，因为酱油已经有足够的咸味了'
+      '不用盐调味，因为酱油已经有足够的咸味了',
+      '出锅前最好静置10分钟，让味道更加融合'
     ]
   },
   {
@@ -167,50 +168,52 @@ export const recipes: Recipe[] = [
     steps: [
       {
         order: 1,
-        description: '面粉倒入盆中，慢慢加入温水，边加边搅拌，揉成光滑的面团，盖上湿布醒30分钟。',
-        image: '/images/recipes/dumplings-step1.png'
+        description: '面粉倒入盆中，慢慢加入温水，边加边搅拌，揉成光滑的面团，盖上湿布醒30分钟，这一步很关键，决定了饺子皮的筋道程度。',
+        image: '/images/recipes/dumplings-main.jpg'
       },
       {
         order: 2,
-        description: '白菜洗净切碎，放入盆中，加入适量盐拌匀，腌制15分钟后挤干水分。',
-        image: '/images/recipes/dumplings-step2.png'
+        description: '白菜洗净切碎，放入盆中，加入适量盐拌匀，腌制15分钟后挤干水分，这样可以去除白菜的生味，并保持馅料干爽。',
+        image: '/images/recipes/dumplings-main.jpg'
       },
       {
         order: 3,
-        description: '猪肉馅剁细，虾仁洗净切碎，葱姜切末。',
-        image: '/images/recipes/dumplings-step3.png'
+        description: '猪肉馅剁细，虾仁洗净切碎，葱姜切末。将肉馅朝一个方向搅拌至起胶状，这样饺子馅会更加紧实多汁。',
+        image: '/images/recipes/dumplings-main.jpg'
       },
       {
         order: 4,
-        description: '将猪肉馅、虾仁、白菜、葱姜末放入大盆中，加入料酒、盐、白胡椒粉、香油，朝一个方向搅拌均匀。',
-        image: '/images/recipes/dumplings-step4.png'
+        description: '将猪肉馅、虾仁、白菜、葱姜末放入大盆中，加入料酒、盐、白胡椒粉、香油，朝一个方向搅拌均匀，直到馅料变得黏稠。',
+        image: '/images/recipes/dumplings-main.jpg'
       },
       {
         order: 5,
-        description: '醒好的面团分成小剂子，擀成直径约10厘米的圆皮。',
-        image: '/images/recipes/dumplings-step5.png'
+        description: '醒好的面团分成小剂子，擀成直径约10厘米的圆皮，中间稍厚、边缘稍薄，这样可以保证包出的饺子形状美观且不易破。',
+        image: '/images/recipes/dumplings-main.jpg'
       },
       {
         order: 6,
-        description: '取一个饺子皮，放入适量馅料，捏紧收口成饺子形状。',
-        image: '/images/recipes/dumplings-step6.png'
+        description: '取一个饺子皮，放入适量馅料，捏紧收口成饺子形状。注意不要包入空气，否则煮饺子时容易破皮。传统的褶子可以捏出10-12个褶。',
+        image: '/images/recipes/dumplings-main.jpg'
       },
       {
         order: 7,
-        description: '锅中烧开水，放入饺子，水再次沸腾后加入少许冷水，重复3次。',
-        image: '/images/recipes/dumplings-step7.png'
+        description: '锅中烧开水，放入饺子，水再次沸腾后加入少许冷水，重复3次。这种"三沸三加水"的方法可以使饺子皮更有弹性。',
+        image: '/images/recipes/dumplings-main.jpg'
       },
       {
         order: 8,
-        description: '饺子浮起且皮变得透明时即可捞出，蘸醋、蒜泥或酱油食用。',
-        image: '/images/recipes/dumplings-step8.png'
+        description: '饺子浮起且皮变得透明时即可捞出，蘸醋、蒜泥或酱油食用。趁热吃口感最佳，皮薄馅嫩，鲜香可口。',
+        image: '/images/recipes/dumplings-main.jpg'
       }
     ],
     tips: [
       '面团不要揉得太硬，以手指按压有轻微回弹为宜',
       '馅料最好搅拌至出现粘性，这样饺子煮熟后会更有汁水',
       '包饺子时注意排出馅料中的空气，避免煮时破皮',
-      '喜欢吃煎饺的话，可以用同样的方法包好饺子，在平底锅中煎至金黄即可'
+      '喜欢吃煎饺的话，可以用同样的方法包好饺子，在平底锅中煎至金黄即可',
+      '醋和姜可以制作蘸料，提升风味，还能帮助消化',
+      '水饺制作完成后可以冷冻保存，食用时无需解冻直接下锅即可'
     ]
   }
 ]; 

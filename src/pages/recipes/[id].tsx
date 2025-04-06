@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Button from '../../components/ui/Button';
@@ -14,6 +14,12 @@ export default function RecipeDetailPage() {
   // 调整份量的倍数
   const [servingsMultiplier, setServingsMultiplier] = useState(1);
   
+  // 开发调试：记录ID和recipes是否加载
+  useEffect(() => {
+    console.log("Current ID:", id);
+    console.log("First recipe ID:", recipes[0]?.id);
+  }, [id]);
+  
   // 找到对应的菜谱
   const recipe = recipes.find(r => r.id === id);
   
@@ -21,7 +27,20 @@ export default function RecipeDetailPage() {
   if (!recipe || typeof id !== 'string') {
     return (
       <div className="container mx-auto py-16 px-4 text-center">
-        <p className="text-gray-500 mb-4">加载中，或菜谱不存在...</p>
+        <h1 className="text-2xl font-bold text-red-600 mb-4">菜谱未找到</h1>
+        <p className="text-gray-500 mb-4">无法找到ID为"{id}"的菜谱</p>
+        <div className="bg-soft rounded-lg p-4 max-w-md mx-auto text-left my-4">
+          <h2 className="font-bold mb-2">调试信息：</h2>
+          <p>请求的ID: <span className="font-mono">{JSON.stringify(id)}</span></p>
+          <p className="mb-2">可用菜谱IDs: </p>
+          <ul className="list-disc pl-5">
+            {recipes.map(r => (
+              <li key={r.id} className="font-mono">
+                {r.id} ({r.name})
+              </li>
+            ))}
+          </ul>
+        </div>
         <Button variant="primary" onClick={() => router.push('/recipes')}>
           返回菜谱列表
         </Button>
@@ -32,6 +51,9 @@ export default function RecipeDetailPage() {
   // 找到关联的食物
   const relatedFood = foods.find(food => food.id === recipe.foodId);
   
+  // 获取主图片或第一个步骤图片
+  const mainImage = recipe.steps[0]?.image?.replace('step1.png', 'main.jpg') || recipe.steps[0]?.image || '/images/recipes/placeholder.png';
+
   return (
     <>
       <Head>
@@ -50,10 +72,10 @@ export default function RecipeDetailPage() {
           返回
         </button>
         
-        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+        <div className="bg-soft rounded-lg shadow-md overflow-hidden mb-8">
           <div 
             className="h-80 bg-cover bg-center"
-            style={{ backgroundImage: `url(${recipe.steps[0]?.image || '/images/recipes/placeholder.png'})` }}
+            style={{ backgroundImage: `url(${mainImage})` }}
           />
           <div className="p-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">{recipe.name}</h1>
@@ -90,7 +112,7 @@ export default function RecipeDetailPage() {
         </div>
         
         {/* 份量计算器 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-soft rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">调整份量</h2>
           <div className="flex items-center space-x-4">
             <p className="text-gray-700">
@@ -115,7 +137,7 @@ export default function RecipeDetailPage() {
         </div>
         
         {/* 食材列表 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-soft rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">食材</h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {recipe.ingredients.map((ingredient, index) => (
@@ -139,7 +161,7 @@ export default function RecipeDetailPage() {
         </div>
         
         {/* 烹饪步骤 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-soft rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-xl font-semibold mb-6">烹饪步骤</h2>
           
           {/* 步骤导航 */}
@@ -201,7 +223,7 @@ export default function RecipeDetailPage() {
         
         {/* 烹饪技巧 */}
         {recipe.tips && recipe.tips.length > 0 && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="bg-soft rounded-lg shadow-md p-6 mb-8">
             <h2 className="text-xl font-semibold mb-4">烹饪技巧</h2>
             <ul className="space-y-3">
               {recipe.tips.map((tip, index) => (

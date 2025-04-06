@@ -5,7 +5,7 @@ import AdminLayout from '../../components/admin/AdminLayout';
 
 // 仪表板卡片组件
 const StatCard = ({ title, value, icon, color }: { title: string; value: string | number; icon: React.ReactNode; color: string }) => (
-  <div className="bg-white rounded-lg shadow-md p-6">
+  <div className="bg-soft rounded-lg shadow-md p-6">
     <div className="flex items-center justify-between">
       <div>
         <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
@@ -99,7 +99,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 快速访问链接 */}
           <div className="lg:col-span-1">
-            <div className="bg-white shadow rounded-lg overflow-hidden">
+            <div className="bg-soft shadow rounded-lg overflow-hidden">
               <div className="px-6 py-5 border-b border-gray-200">
                 <h3 className="text-lg font-medium text-gray-900">快速访问</h3>
               </div>
@@ -154,7 +154,7 @@ export default function AdminDashboard() {
 
           {/* 最近活动 */}
           <div className="lg:col-span-2">
-            <div className="bg-white shadow rounded-lg overflow-hidden">
+            <div className="bg-soft shadow rounded-lg overflow-hidden">
               <div className="px-6 py-5 border-b border-gray-200">
                 <h3 className="text-lg font-medium text-gray-900">最近活动</h3>
               </div>

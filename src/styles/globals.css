@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #f8f7f2;
   --foreground: #171717;
+  --primary: #e11d48;
+  --primary-light: #f43f5e;
+  --primary-dark: #be123c;
+  --secondary: #fb923c;
 }
 
 @theme inline {
@@ -22,5 +26,54 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Add eye-friendly background classes */
+.bg-soft {
+  background-color: #f8f7f2;
+}
+
+.hover\:bg-soft:hover {
+  background-color: #f1f0ea;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Gradient text utility */
+.text-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-400;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.15);
 }

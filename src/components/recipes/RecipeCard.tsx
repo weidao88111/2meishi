@@ -31,11 +31,24 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     hard: '困难',
   };
 
+  // 如果有main图片则使用main图片
+  const mainImageUrl = imageUrl?.replace('step1.png', 'main.jpg') || '/images/recipes/placeholder.png';
+  
+  // 根据菜谱ID确定链接路径
+  let recipeLink = `/recipes/${id}`;
+  
+  // 为特定菜谱使用专用页面
+  if (id === 'mapo-tofu-recipe') {
+    recipeLink = '/recipes/mapo-tofu';
+  } else if (id === 'dongpo-pork-recipe') {
+    recipeLink = '/recipes/dongpo-pork';
+  }
+  
   return (
-    <Link href={`/recipes/${id}`} className="block no-underline text-current">
+    <Link href={recipeLink} className="block no-underline text-current">
       <Card hover className="h-full">
         <CardImage 
-          src={imageUrl || '/images/recipes/placeholder.png'} 
+          src={mainImageUrl} 
           alt={name}
           className="h-48" 
         />

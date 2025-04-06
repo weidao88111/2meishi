@@ -46,7 +46,7 @@ export default function RecipesPage() {
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{relatedFood.name}的菜谱</h1>
               <p className="text-gray-600 mb-6">{relatedFood.englishName}</p>
               
-              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+              <div className="bg-soft rounded-lg shadow-md p-6 mb-8">
                 <h2 className="text-xl font-semibold mb-4">关于{relatedFood.name}</h2>
                 <p className="text-gray-700 mb-4">{relatedFood.description}</p>
                 <p className="text-gray-700">{relatedFood.history}</p>
@@ -113,7 +113,7 @@ export default function RecipesPage() {
         <p className="text-gray-600 mb-8">探索中国传统美食的制作方法，学习地道的烹饪技巧</p>
         
         {/* 筛选区域 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-soft rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-lg font-semibold mb-4">筛选菜谱</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

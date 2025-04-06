@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -20,6 +20,32 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
 }) => {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Check if user is authenticated
+  useEffect(() => {
+    const checkAuth = () => {
+      // Add check to handle server-side rendering
+      if (typeof window !== 'undefined') {
+        const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+        if (!isLoggedIn) {
+          router.push('/admin/login');
+        } else {
+          setIsLoading(false);
+        }
+      }
+    };
+    
+    checkAuth();
+  }, [router]);
+  
+  // Handle logout
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('adminLoggedIn');
+      router.push('/admin/login');
+    }
+  };
   
   // 检查当前路由是否匹配
   const isActiveRoute = (route: string) => {
@@ -31,6 +57,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
     }
     return false;
   };
+  
+  // If still checking auth state, return loading indicator
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
   
   // 侧边栏菜单项
   const menuItems = [
@@ -70,7 +105,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
       <div className={`fixed inset-0 flex z-40 md:hidden ${sidebarOpen ? 'block' : 'hidden'}`} role="dialog" aria-modal="true">
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" aria-hidden="true" onClick={() => setSidebarOpen(false)}></div>
         
-        <div className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-white">
+        <div className="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-soft">
           <div className="absolute top-0 right-0 -mr-12 pt-2">
             <button
               type="button"
@@ -112,20 +147,43 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
                 </Link>
               ))}
             </nav>
+            
+            {/* Add logout option to mobile sidebar */}
+            <div className="mt-6 px-2">
+              <div className="flex items-center mb-3 px-2">
+                <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
+                  <span className="text-red-600 font-medium">管</span>
+                </div>
+                <div className="ml-3">
+                  <p className="text-base font-medium text-gray-700">系统管理员</p>
+                </div>
+              </div>
+              <div className="flex space-x-2 px-2">
+                <a href="/" className="flex-1 text-center py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                  返回前台
+                </a>
+                <button 
+                  onClick={handleLogout} 
+                  className="flex-1 text-center py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700"
+                >
+                  退出登录
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       
       {/* 桌面端侧边栏 */}
       <div className="hidden md:flex md:flex-shrink-0">
-        <div className="flex flex-col w-64 border-r border-gray-200 bg-white">
+        <div className="flex flex-col w-64 border-r border-gray-200 bg-soft">
           <div className="h-0 flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
             <div className="flex items-center flex-shrink-0 px-4">
               <span className="text-2xl font-bold text-red-600">美食博物馆</span>
             </div>
             
             <div className="mt-5 flex-1 flex flex-col">
-              <nav className="flex-1 px-2 space-y-1 bg-white">
+              <nav className="flex-1 px-2 space-y-1 bg-soft">
                 {menuItems.map((item) => (
                   <Link 
                     key={item.href}
@@ -152,27 +210,32 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
           </div>
           
           <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-            <a href="/" className="flex-shrink-0 w-full group block">
-              <div className="flex items-center">
+            <div className="flex-shrink-0 w-full">
+              <div className="flex items-center mb-2">
                 <div className="flex-shrink-0 h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
                   <span className="text-red-600 font-medium">管</span>
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                  <p className="text-sm font-medium text-gray-700">
                     系统管理员
-                  </p>
-                  <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
-                    返回前台
                   </p>
                 </div>
               </div>
-            </a>
+              <div className="flex space-x-2">
+                <a href="/" className="flex-1 text-center py-2 px-2 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-soft hover:bg-gray-50">
+                  返回前台
+                </a>
+                <button onClick={handleLogout} className="flex-1 text-center py-2 px-2 border border-transparent rounded-md text-xs font-medium text-white bg-red-600 hover:bg-red-700">
+                  退出登录
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
-        <div className="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
+        <div className="relative z-10 flex-shrink-0 flex h-16 bg-soft shadow">
           <button
             type="button"
             className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500 md:hidden"
@@ -197,12 +260,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
               </button>
               
               <div className="ml-3 relative">
-                <button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                  <span className="sr-only">打开用户菜单</span>
-                  <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center">
-                    <span className="text-red-600 font-medium">管</span>
-                  </div>
-                </button>
+                <div>
+                  <button className="max-w-xs bg-soft flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <span className="sr-only">打开用户菜单</span>
+                    <div className="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center">
+                      <span className="text-red-600 font-medium">管</span>
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -210,7 +275,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
         
         <main className="flex-1 relative overflow-y-auto focus:outline-none">
           {/* 面包屑导航 */}
-          <div className="py-4 bg-white border-b border-gray-200">
+          <div className="py-4 bg-soft border-b border-gray-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               <nav className="flex" aria-label="Breadcrumb">
                 <ol className="flex items-center space-x-4">

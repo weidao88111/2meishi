@@ -18,7 +18,7 @@ export const regions: Region[] = [
     cuisine: '四川菜系',
     features: ['麻辣', '香辣', '酸辣', '鱼香'],
     famousDishes: ['麻婆豆腐', '回锅肉', '水煮鱼', '宫保鸡丁'],
-    image: '/images/regions/sichuan.jpg'
+    image: '/images/regions/sichuan.png'
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ export const regions: Region[] = [
     cuisine: '广东菜系',
     features: ['清淡', '鲜美', '嫩滑', '多样'],
     famousDishes: ['白切鸡', '脆皮烧鹅', '蜜汁叉烧', '清蒸鱼'],
-    image: '/images/regions/cantonese.jpg'
+    image: '/images/regions/guangdong.png'
   },
   {
     id: 3,
@@ -38,7 +38,7 @@ export const regions: Region[] = [
     cuisine: '山东菜系',
     features: ['咸鲜', '醇厚', '火候精准', '选料严谨'],
     famousDishes: ['葱烧海参', '烤全鱼', '九转大肠', '德州扒鸡'],
-    image: '/images/regions/shandong.jpg'
+    image: '/images/regions/shandong.png'
   },
   {
     id: 4,
@@ -48,7 +48,7 @@ export const regions: Region[] = [
     cuisine: '江苏菜系',
     features: ['精致', '细腻', '平和', '鲜甜'],
     famousDishes: ['清蒸蟹粉狮子头', '松鼠桂鱼', '盐水鸭', '水晶肴肉'],
-    image: '/images/regions/jiangsu.jpg'
+    image: '/images/regions/jiangsu.png'
   },
   {
     id: 5,
@@ -58,7 +58,7 @@ export const regions: Region[] = [
     cuisine: '浙江菜系',
     features: ['鲜美', '清淡', '精致', '脆嫩'],
     famousDishes: ['西湖醋鱼', '东坡肉', '龙井虾仁', '叫化鸡'],
-    image: '/images/regions/zhejiang.jpg'
+    image: '/images/regions/zhejiang.png'
   },
   {
     id: 6,
@@ -68,7 +68,7 @@ export const regions: Region[] = [
     cuisine: '福建菜系',
     features: ['清鲜', '汤汁浓郁', '讲究调味', '海鲜为主'],
     famousDishes: ['佛跳墙', '沙茶面', '芋泥肉丸', '烧肉粽'],
-    image: '/images/regions/fujian.jpg'
+    image: '/images/regions/fujian.png'
   },
   {
     id: 7,
@@ -78,7 +78,7 @@ export const regions: Region[] = [
     cuisine: '湖南菜系',
     features: ['香辣', '浓郁', '酸辣', '鲜香'],
     famousDishes: ['剁椒鱼头', '口味虾', '臭豆腐', '红煨肉'],
-    image: '/images/regions/hunan.jpg'
+    image: '/images/regions/hunan.png'
   },
   {
     id: 8,
@@ -88,6 +88,6 @@ export const regions: Region[] = [
     cuisine: '安徽菜系',
     features: ['原汁原味', '用料独特', '火功精湛', '讲究营养'],
     famousDishes: ['臭鳜鱼', '符离集烧鸡', '腌鲜鳜鱼', '徽州毛豆腐'],
-    image: '/images/regions/anhui.jpg'
+    image: '/images/regions/anhui.png'
   }
 ]; 

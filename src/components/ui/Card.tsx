@@ -7,10 +7,10 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ children, className = '', hover = false }) => {
-  const hoverClass = hover ? 'transform transition duration-300 hover:shadow-lg hover:-translate-y-1' : '';
+  const hoverClass = hover ? 'transform transition duration-300 hover:shadow-xl hover:-translate-y-2' : '';
   
   return (
-    <div className={`bg-white rounded-xl shadow-md overflow-hidden ${hoverClass} ${className}`}>
+    <div className={`bg-soft rounded-2xl shadow-sm overflow-hidden ${hoverClass} ${className} transition-all duration-300`}>
       {children}
     </div>
   );
@@ -20,14 +20,14 @@ export const CardHeader: React.FC<{ children: ReactNode; className?: string }> =
   children, 
   className = '' 
 }) => {
-  return <div className={`px-6 py-4 ${className}`}>{children}</div>;
+  return <div className={`px-6 py-5 ${className}`}>{children}</div>;
 };
 
 export const CardBody: React.FC<{ children: ReactNode; className?: string }> = ({ 
   children, 
   className = '' 
 }) => {
-  return <div className={`px-6 py-4 ${className}`}>{children}</div>;
+  return <div className={`px-6 py-5 ${className}`}>{children}</div>;
 };
 
 export const CardFooter: React.FC<{ children: ReactNode; className?: string }> = ({ 
