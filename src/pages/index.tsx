@@ -117,7 +117,7 @@ export default function Home() {
         </div>
         <div className="mt-10 text-center">
           <Link href="/regions">
-            <Button variant="gradient" size="lg">查看所有地区</Button>
+            <Button variant="primary" size="lg" className="bg-red-600 text-white hover:bg-red-700">查看所有地区</Button>
           </Link>
         </div>
       </Section>
@@ -135,7 +135,7 @@ export default function Home() {
               不知道吃什么？想了解某道菜的做法？我们的AI助手可以帮助你解答关于中国美食的各种问题，并为你提供个性化的推荐。
             </p>
             <Link href="/ai-assistant">
-              <Button variant="outline" size="lg" className="bg-soft bg-opacity-10 border-white text-white hover:bg-soft hover:bg-opacity-20">
+              <Button variant="outline" size="lg" className="bg-red-500 bg-opacity-80 border-white text-white hover:bg-red-600 hover:bg-opacity-90">
                 立即体验
               </Button>
             </Link>

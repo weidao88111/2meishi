@@ -39,7 +39,7 @@ const Hero: React.FC<HeroProps> = ({
           <div className="flex flex-col sm:flex-row gap-4">
             {primaryButtonText && primaryButtonLink && (
               <Link href={primaryButtonLink}>
-                <Button variant="gradient" size="lg">
+                <Button variant="primary" size="lg" className="bg-red-600 text-white hover:bg-red-700">
                   {primaryButtonText}
                 </Button>
               </Link>
@@ -49,7 +49,7 @@ const Hero: React.FC<HeroProps> = ({
                 <Button 
                   variant="secondary" 
                   size="lg" 
-                  className="bg-white text-red-600 border-2 border-white hover:bg-red-50 hover:text-red-700 shadow-md font-semibold"
+                  className="bg-red-100 text-red-700 border-2 border-red-500 hover:bg-red-200 hover:text-red-800 shadow-md font-semibold"
                 >
                   {secondaryButtonText}
                 </Button>

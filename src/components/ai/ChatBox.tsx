@@ -58,7 +58,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="试着问我关于中国美食的问题..." 
-          className="w-full p-4 pr-12 rounded-xl bg-white bg-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-opacity-30 transition-all" 
+          className="w-full p-4 pr-12 rounded-xl bg-black bg-opacity-40 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-opacity-50 border border-red-400 border-opacity-40 transition-all" 
           disabled={isLoading}
         />
         <button 
