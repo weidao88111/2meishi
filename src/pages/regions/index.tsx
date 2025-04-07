@@ -113,7 +113,7 @@ export default function RegionsPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/recipes">
-              <Button variant="gradient" size="lg">浏览热门菜谱</Button>
+              <Button variant="primary" size="lg">浏览热门菜谱</Button>
             </Link>
             <Link href="/history">
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:bg-opacity-10">

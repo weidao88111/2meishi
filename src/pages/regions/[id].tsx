@@ -66,7 +66,7 @@ export default function RegionDetailPage() {
             <p className="text-white text-lg mb-8">{region.description}</p>
             <div>
               <Link href="#region-foods">
-                <Button variant="gradient" size="lg">
+                <Button variant="primary" size="lg">
                   探索{region.name}美食
                 </Button>
               </Link>
