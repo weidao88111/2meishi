@@ -72,10 +72,10 @@ export default function RecipeDetailPage() {
           返回
         </button>
         
-        <div className="bg-soft rounded-lg shadow-md overflow-hidden mb-8">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
           <div 
             className="h-80 bg-cover bg-center"
-            style={{ backgroundImage: `url(${mainImage})` }}
+            style={{ backgroundImage: `url(${recipe.mainImage || recipe.steps[0]?.image || '/images/recipes/placeholder.png'})` }}
           />
           <div className="p-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">{recipe.name}</h1>

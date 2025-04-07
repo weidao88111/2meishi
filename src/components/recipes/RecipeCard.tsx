@@ -9,6 +9,7 @@ interface RecipeCardProps {
   prepTime: number;
   cookTime: number;
   imageUrl: string;
+  mainImage?: string;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({
@@ -18,6 +19,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   prepTime,
   cookTime,
   imageUrl,
+  mainImage,
 }) => {
   const difficultyColor = {
     easy: 'bg-green-100 text-green-800',
@@ -31,8 +33,8 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     hard: '困难',
   };
 
-  // 如果有main图片则使用main图片
-  const mainImageUrl = imageUrl?.replace('step1.png', 'main.jpg') || '/images/recipes/placeholder.png';
+  // 使用主图片，如果没有则使用步骤图片
+  const displayImage = mainImage || imageUrl || '/images/recipes/placeholder.png';
   
   // 根据菜谱ID确定链接路径
   let recipeLink = `/recipes/${id}`;
@@ -48,7 +50,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     <Link href={recipeLink} className="block no-underline text-current">
       <Card hover className="h-full">
         <CardImage 
-          src={mainImageUrl} 
+          src={displayImage} 
           alt={name}
           className="h-48" 
         />

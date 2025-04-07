@@ -66,6 +66,7 @@ export default function RecipesPage() {
                     prepTime={recipe.prepTime}
                     cookTime={recipe.cookTime}
                     imageUrl={recipe.steps[0]?.image || '/images/recipes/placeholder.png'}
+                    mainImage={recipe.mainImage}
                   />
                 ))}
               </div>
@@ -157,6 +158,7 @@ export default function RecipesPage() {
                 prepTime={recipe.prepTime}
                 cookTime={recipe.cookTime}
                 imageUrl={recipe.steps[0]?.image || '/images/recipes/placeholder.png'}
+                mainImage={recipe.mainImage}
               />
             ))}
           </div>

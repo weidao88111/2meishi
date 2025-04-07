@@ -33,6 +33,7 @@ export interface Recipe {
     image?: string;
   }[];
   tips: string[];
+  mainImage?: string; // Main recipe image
 }
 
 export interface Ingredient {
