@@ -3,9 +3,25 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Button from '../../components/ui/Button';
+import { getFromLocalStorage, saveToLocalStorage } from '@/utils/localStorage';
+
+// 从用户管理页面复制的User接口定义
+interface User {
+  id: number;
+  username: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'editor' | 'viewer' | 'registered';
+  status: 'active' | 'inactive';
+  lastLogin: string;
+}
+
+// 存储用户数据的localStorage键名（需要与管理页面使用相同的键名）
+const USERS_STORAGE_KEY = 'foodmuseum_admin_users';
 
 export default function Register() {
   const [username, setUsername] = useState('');
+  const [name, setName] = useState(''); // 添加姓名字段
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -34,7 +50,7 @@ export default function Register() {
     e.preventDefault();
     
     // Validate form
-    if (!username || !email || !password || !confirmPassword) {
+    if (!username || !name || !email || !password || !confirmPassword) {
       setError('请填写所有必填项');
       return;
     }
@@ -55,16 +71,55 @@ export default function Register() {
     setError('');
     
     try {
-      // 这里将来会实现实际的注册API调用
-      // 目前只是模拟成功注册
-      setTimeout(() => {
-        // 设置注册成功的状态
-        localStorage.setItem('userLoggedIn', 'true');
-        localStorage.setItem('userName', username);
-        
-        // 注册成功后跳转到用户主页
-        router.push('/dashboard');
-      }, 1000);
+      // 从localStorage获取现有用户列表
+      const existingUsers = getFromLocalStorage<User[]>(USERS_STORAGE_KEY, []);
+      
+      // 检查用户名是否已被使用
+      if (existingUsers.some(user => user.username === username)) {
+        setError('该用户名已被使用');
+        setIsLoading(false);
+        return;
+      }
+      
+      // 检查邮箱是否已被使用
+      if (existingUsers.some(user => user.email === email)) {
+        setError('该邮箱已被注册');
+        setIsLoading(false);
+        return;
+      }
+      
+      // 创建新用户对象
+      const currentDate = new Date();
+      const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')} ${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
+      
+      // 生成新ID（取最大ID + 1，如果没有用户则从1开始）
+      const maxId = existingUsers.length > 0 ? Math.max(...existingUsers.map(user => user.id)) : 0;
+      
+      const newUser: User = {
+        id: maxId + 1,
+        username,
+        name,
+        email,
+        role: 'registered', // 默认为注册用户角色
+        status: 'active',
+        lastLogin: formattedDate
+      };
+      
+      // 将新用户添加到用户列表并保存到localStorage
+      const updatedUsers = [...existingUsers, newUser];
+      saveToLocalStorage(USERS_STORAGE_KEY, updatedUsers);
+      
+      // 设置注册成功的状态
+      localStorage.setItem('userLoggedIn', 'true');
+      localStorage.setItem('userName', username);
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userId', String(newUser.id));
+      
+      // 触发自定义事件，通知Navbar更新登录状态
+      window.dispatchEvent(new Event('loginStatusChange'));
+      
+      // 注册成功后跳转到用户主页
+      router.push('/dashboard');
     } catch (err) {
       console.error('注册失败:', err);
       setError('注册过程中发生错误，请稍后再试');
@@ -123,6 +178,21 @@ export default function Register() {
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                   placeholder="请输入用户名"
+                  disabled={isLoading}
+                />
+              </div>
+              
+              <div className="mb-6">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  姓名 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                  placeholder="请输入您的姓名"
                   disabled={isLoading}
                 />
               </div>

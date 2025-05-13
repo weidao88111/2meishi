@@ -3,6 +3,21 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Button from '../../components/ui/Button';
+import { getFromLocalStorage, saveToLocalStorage } from '@/utils/localStorage';
+
+// 从用户管理页面复制的User接口定义
+interface User {
+  id: number;
+  username: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'editor' | 'viewer' | 'registered';
+  status: 'active' | 'inactive';
+  lastLogin: string;
+}
+
+// 存储用户数据的localStorage键名（需要与管理页面使用相同的键名）
+const USERS_STORAGE_KEY = 'foodmuseum_admin_users';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -36,6 +51,25 @@ export default function Login() {
     }
   }, [router]);
 
+  // 获取当前格式化的日期时间
+  const getCurrentFormattedDateTime = (): string => {
+    const currentDate = new Date();
+    return `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')} ${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
+  };
+
+  // 更新用户的最后登录时间
+  const updateUserLastLogin = (userId: number): void => {
+    const users = getFromLocalStorage<User[]>(USERS_STORAGE_KEY, []);
+    const updatedUsers = users.map(user => {
+      if (user.id === userId) {
+        return { ...user, lastLogin: getCurrentFormattedDateTime() };
+      }
+      return user;
+    });
+    
+    saveToLocalStorage(USERS_STORAGE_KEY, updatedUsers);
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -53,6 +87,10 @@ export default function Login() {
         if (username === 'admin' && password === 'admin123') {
           localStorage.setItem('adminLoggedIn', 'true');
           localStorage.setItem('userName', username);
+          
+          // 触发自定义事件，通知Navbar更新登录状态
+          window.dispatchEvent(new Event('loginStatusChange'));
+          
           router.push('/admin/dashboard');
         } else {
           setError('管理员账号或密码不正确');
@@ -60,11 +98,46 @@ export default function Login() {
       } 
       // User login logic
       else {
-        // 这里是模拟的用户登录逻辑
-        if (username === 'user' && password === 'user123') {
-          localStorage.setItem('userLoggedIn', 'true');
-          localStorage.setItem('userName', username);
-          router.push('/dashboard');
+        // 从localStorage获取用户列表
+        const users = getFromLocalStorage<User[]>(USERS_STORAGE_KEY, []);
+        
+        // 查找匹配的用户 (在真实应用中应该使用密码哈希而不是明文比较)
+        // 这里简化处理，在实际应用中应使用密码哈希比较
+        const user = users.find(u => u.username === username);
+        
+        // 模拟用户登录，支持测试账号或注册的用户账号
+        if ((username === 'user' && password === 'user123') || user) {
+          // 如果是已注册用户且状态为活跃，则更新登录时间
+          if (user && user.status === 'active') {
+            updateUserLastLogin(user.id);
+            
+            localStorage.setItem('userLoggedIn', 'true');
+            localStorage.setItem('userName', user.username);
+            localStorage.setItem('userEmail', user.email);
+            localStorage.setItem('userId', String(user.id));
+            
+            // 触发自定义事件，通知Navbar更新登录状态
+            window.dispatchEvent(new Event('loginStatusChange'));
+            
+            router.push('/dashboard');
+          } 
+          // 测试账号登录
+          else if (username === 'user' && password === 'user123') {
+            localStorage.setItem('userLoggedIn', 'true');
+            localStorage.setItem('userName', username);
+            
+            // 触发自定义事件，通知Navbar更新登录状态
+            window.dispatchEvent(new Event('loginStatusChange'));
+            
+            router.push('/dashboard');
+          }
+          // 用户账号被禁用
+          else if (user && user.status === 'inactive') {
+            setError('您的账号已被禁用，请联系管理员');
+          }
+          else {
+            setError('用户名或密码不正确');
+          }
         } else {
           setError('用户名或密码不正确');
         }

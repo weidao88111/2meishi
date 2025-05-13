@@ -47,8 +47,19 @@ export default function Dashboard() {
       // 计算未读通知
       const unreads = notifications.filter(n => !n.isRead).length;
       setUnreadCount(unreads);
+      
+      // 触发自定义事件，确保导航栏更新登录状态
+      window.dispatchEvent(new Event('loginStatusChange'));
     }
   }, [router]);
+
+  // 添加一个监听路由变化的效果，确保在导航后登录状态仍然正确
+  useEffect(() => {
+    // 触发自定义事件，确保导航栏更新登录状态
+    if (typeof window !== 'undefined' && !isLoading) {
+      window.dispatchEvent(new Event('loginStatusChange'));
+    }
+  }, [router.pathname, isLoading]);
 
   if (isLoading) {
     return (

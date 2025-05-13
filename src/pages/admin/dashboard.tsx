@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import AdminLayout from '../../components/admin/AdminLayout';
 
 // 仪表板卡片组件
@@ -19,6 +20,15 @@ const StatCard = ({ title, value, icon, color }: { title: string; value: string 
 );
 
 export default function AdminDashboard() {
+  const router = useRouter();
+
+  // 触发登录状态变更事件，确保导航栏正确显示退出登录按钮
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('loginStatusChange'));
+    }
+  }, [router.pathname]);
+
   // 模拟数据
   const statsData = {
     totalFoods: 108,

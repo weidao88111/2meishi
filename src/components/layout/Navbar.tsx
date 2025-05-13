@@ -9,8 +9,8 @@ const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    // 检查用户登录状态
+  // 检查用户登录状态的函数
+  const checkAuthStatus = () => {
     if (typeof window !== 'undefined') {
       const userLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
       const adminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -19,7 +19,29 @@ const Navbar: React.FC = () => {
       setIsLoggedIn(userLoggedIn || adminLoggedIn);
       setUserName(name);
     }
+  };
+
+  useEffect(() => {
+    // 初始检查登录状态
+    checkAuthStatus();
+    
+    // 添加事件监听器，以便在localStorage变化时更新状态
+    window.addEventListener('storage', checkAuthStatus);
+    
+    // 添加自定义事件监听器，以便其他组件可以触发登录状态更新
+    window.addEventListener('loginStatusChange', checkAuthStatus);
+    
+    // 组件卸载时清理事件监听器
+    return () => {
+      window.removeEventListener('storage', checkAuthStatus);
+      window.removeEventListener('loginStatusChange', checkAuthStatus);
+    };
   }, []);
+
+  // 页面路由变化时也检查登录状态
+  useEffect(() => {
+    checkAuthStatus();
+  }, [router.pathname]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -33,9 +55,16 @@ const Navbar: React.FC = () => {
     localStorage.removeItem('userLoggedIn');
     localStorage.removeItem('adminLoggedIn');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userId');
+    
     setIsLoggedIn(false);
     setUserName('');
     setIsDropdownOpen(false);
+    
+    // 触发自定义事件，通知其他组件登录状态已经更改
+    window.dispatchEvent(new Event('loginStatusChange'));
+    
     router.push('/');
   };
 
@@ -83,7 +112,7 @@ const Navbar: React.FC = () => {
                 </button>
                 
                 {isDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                     <Link href="/profile" 
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setIsDropdownOpen(false)}
