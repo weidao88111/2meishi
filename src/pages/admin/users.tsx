@@ -158,6 +158,22 @@ const AdminUsers: React.FC = () => {
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
   const [selectedRole, setSelectedRole] = useState<string>('');
   
+  // 添加用户相关状态
+  const [isAddUserDialogOpen, setIsAddUserDialogOpen] = useState(false);
+  const [newUser, setNewUser] = useState<{
+    username: string;
+    name: string;
+    email: string;
+    role: string;
+    status: string;
+  }>({
+    username: '',
+    name: '',
+    email: '',
+    role: 'registered',
+    status: 'active'
+  });
+  
   const itemsPerPage = 10;
   
   // 角色选项
@@ -258,6 +274,63 @@ const AdminUsers: React.FC = () => {
     }
   };
   
+  // 打开添加用户对话框
+  const handleAddUserClick = () => {
+    setIsAddUserDialogOpen(true);
+  };
+  
+  // 处理新用户表单输入变化
+  const handleNewUserChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setNewUser(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  // 添加新用户
+  const handleAddUserConfirm = () => {
+    // 表单验证
+    if (!newUser.username || !newUser.name || !newUser.email) {
+      showToast('请填写所有必填字段', 'error');
+      return;
+    }
+    
+    // 检查用户名是否已存在
+    if (users.some(user => user.username === newUser.username)) {
+      showToast('用户名已存在', 'error');
+      return;
+    }
+    
+    // 创建新用户
+    const maxId = Math.max(...users.map(user => user.id));
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')} ${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
+    
+    const userToAdd: User = {
+      id: maxId + 1,
+      username: newUser.username,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role as 'admin' | 'editor' | 'viewer' | 'registered',
+      status: newUser.status as 'active' | 'inactive',
+      lastLogin: formattedDate
+    };
+    
+    setUsers([...users, userToAdd]);
+    showToast('用户添加成功', 'success');
+    
+    // 重置表单并关闭对话框
+    setNewUser({
+      username: '',
+      name: '',
+      email: '',
+      role: 'registered',
+      status: 'active'
+    });
+    setIsAddUserDialogOpen(false);
+  };
+  
   return (
     <AdminLayout 
       title="用户管理" 
@@ -271,7 +344,7 @@ const AdminUsers: React.FC = () => {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">用户管理</h1>
           <ActionButton
-            onClick={() => console.log('添加用户')}
+            onClick={handleAddUserClick}
             icon={
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -451,6 +524,123 @@ const AdminUsers: React.FC = () => {
             </div>
           </div>
         )}
+        
+        {/* 添加用户对话框 */}
+        <div className={`fixed inset-0 overflow-y-auto ${isAddUserDialogOpen ? 'block' : 'hidden'}`}>
+          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                      添加新用户
+                    </h3>
+                    <div className="mt-4 space-y-4">
+                      <div>
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                          用户名 <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="username"
+                          id="username"
+                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                          value={newUser.username}
+                          onChange={handleNewUserChange}
+                        />
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                          姓名 <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          id="name"
+                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                          value={newUser.name}
+                          onChange={handleNewUserChange}
+                        />
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                          邮箱 <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          id="email"
+                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                          value={newUser.email}
+                          onChange={handleNewUserChange}
+                        />
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                          角色
+                        </label>
+                        <select
+                          id="role"
+                          name="role"
+                          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
+                          value={newUser.role}
+                          onChange={handleNewUserChange}
+                        >
+                          {roleOptions.filter(option => option.value !== '').map(option => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="status" className="block text-sm font-medium text-gray-700">
+                          状态
+                        </label>
+                        <select
+                          id="status"
+                          name="status"
+                          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
+                          value={newUser.status}
+                          onChange={handleNewUserChange}
+                        >
+                          <option value="active">活跃</option>
+                          <option value="inactive">非活跃</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button
+                  type="button"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={handleAddUserConfirm}
+                >
+                  添加用户
+                </button>
+                <button
+                  type="button"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={() => setIsAddUserDialogOpen(false)}
+                >
+                  取消
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </AdminLayout>
   );
