@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // 朝代数据
 const dynasties = [
@@ -270,42 +271,41 @@ export default function HistoryPage() {
               {/* 朝代内容 */}
               <div className="space-y-12">
                 {displayedDynasties.map((dynasty, index) => (
-                  <div key={dynasty.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div className="md:flex">
-                      <div className="md:w-1/3 relative h-60 md:h-auto">
-                        <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                          <span className="text-gray-400">图片加载中</span>
+                  <div key={dynasty.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <Link href={`/history/${dynasty.id}`}>
+                      <div className="md:flex">
+                        <div className="md:w-1/3 relative h-60 md:h-auto">
+                          {dynasty.image && (
+                            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${dynasty.image})` }}></div>
+                          )}
                         </div>
-                        {dynasty.image && (
-                          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${dynasty.image})` }}></div>
-                        )}
+                        <div className="p-6 md:w-2/3">
+                          <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-2xl font-bold text-gray-900">{dynasty.name}</h2>
+                            <span className="text-sm bg-gray-100 px-3 py-1 rounded-full">{dynasty.period}</span>
+                          </div>
+                          <p className="text-gray-700 mb-4">
+                            {dynasty.description}
+                          </p>
+                          
+                          <h3 className="font-semibold mb-2 text-gray-800">重要事件</h3>
+                          <ul className="list-disc pl-5 mb-4 text-gray-600 text-sm">
+                            {dynasty.keyEvents.map((event, i) => (
+                              <li key={i}>{event}</li>
+                            ))}
+                          </ul>
+                          
+                          <h3 className="font-semibold mb-2 text-gray-800">代表性食物</h3>
+                          <div className="flex flex-wrap gap-2">
+                            {dynasty.significantFoods.map((food, i) => (
+                              <span key={i} className="bg-red-50 text-red-600 px-3 py-1 rounded-full text-sm">
+                                {food}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                      <div className="p-6 md:w-2/3">
-                        <div className="flex items-center justify-between mb-4">
-                          <h2 className="text-2xl font-bold text-gray-900">{dynasty.name}</h2>
-                          <span className="text-sm bg-gray-100 px-3 py-1 rounded-full">{dynasty.period}</span>
-                        </div>
-                        <p className="text-gray-700 mb-4">
-                          {dynasty.description}
-                        </p>
-                        
-                        <h3 className="font-semibold mb-2 text-gray-800">重要事件</h3>
-                        <ul className="list-disc pl-5 mb-4 text-gray-600 text-sm">
-                          {dynasty.keyEvents.map((event, i) => (
-                            <li key={i}>{event}</li>
-                          ))}
-                        </ul>
-                        
-                        <h3 className="font-semibold mb-2 text-gray-800">代表性食物</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {dynasty.significantFoods.map((food, i) => (
-                            <span key={i} className="bg-red-50 text-red-600 px-3 py-1 rounded-full text-sm">
-                              {food}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+                    </Link>
                   </div>
                 ))}
               </div>
@@ -316,24 +316,23 @@ export default function HistoryPage() {
           {activeTab === 'figures' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {historicalFigures.map(figure => (
-                <div key={figure.id} className="bg-white rounded-lg shadow-md overflow-hidden flex">
-                  <div className="w-1/3 relative">
-                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-400 text-xs">图片加载中</span>
+                <div key={figure.id} className="bg-white rounded-lg shadow-md overflow-hidden flex hover:shadow-lg transition-shadow">
+                  <Link href={`/history/figures/${figure.id}`} className="flex w-full">
+                    <div className="w-1/3 relative">
+                      {figure.image && (
+                        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${figure.image})` }}></div>
+                      )}
                     </div>
-                    {figure.image && (
-                      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${figure.image})` }}></div>
-                    )}
-                  </div>
-                  <div className="p-4 w-2/3">
-                    <div className="flex justify-between items-center mb-2">
-                      <h2 className="text-xl font-bold">{figure.name}</h2>
-                      <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">{figure.period}</span>
+                    <div className="p-4 w-2/3">
+                      <div className="flex justify-between items-center mb-2">
+                        <h2 className="text-xl font-bold">{figure.name}</h2>
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">{figure.period}</span>
+                      </div>
+                      <p className="text-gray-600 text-sm">
+                        {figure.contribution}
+                      </p>
                     </div>
-                    <p className="text-gray-600 text-sm">
-                      {figure.contribution}
-                    </p>
-                  </div>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -343,27 +342,26 @@ export default function HistoryPage() {
           {activeTab === 'books' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {historicalBooks.map(book => (
-                <div key={book.id} className="bg-white rounded-lg shadow-md overflow-hidden flex">
-                  <div className="w-1/3 relative">
-                    <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-400 text-xs">图片加载中</span>
+                <div key={book.id} className="bg-white rounded-lg shadow-md overflow-hidden flex hover:shadow-lg transition-shadow">
+                  <Link href={`/history/books/${book.id}`} className="flex w-full">
+                    <div className="w-1/3 relative">
+                      {book.image && (
+                        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${book.image})` }}></div>
+                      )}
                     </div>
-                    {book.image && (
-                      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${book.image})` }}></div>
-                    )}
-                  </div>
-                  <div className="p-4 w-2/3">
-                    <div className="mb-2">
-                      <h2 className="text-xl font-bold">{book.name}</h2>
-                      <div className="flex justify-between text-xs text-gray-500">
-                        <span>作者: {book.author}</span>
-                        <span>{book.period}</span>
+                    <div className="p-4 w-2/3">
+                      <div className="mb-2">
+                        <h2 className="text-xl font-bold">{book.name}</h2>
+                        <div className="flex justify-between text-xs text-gray-500">
+                          <span>作者: {book.author}</span>
+                          <span>{book.period}</span>
+                        </div>
                       </div>
+                      <p className="text-gray-600 text-sm">
+                        {book.description}
+                      </p>
                     </div>
-                    <p className="text-gray-600 text-sm">
-                      {book.description}
-                    </p>
-                  </div>
+                  </Link>
                 </div>
               ))}
             </div>

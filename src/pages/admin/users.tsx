@@ -19,7 +19,7 @@ interface User {
   username: string;
   name: string;
   email: string;
-  role: 'admin' | 'editor' | 'viewer';
+  role: 'admin' | 'editor' | 'viewer' | 'registered';
   status: 'active' | 'inactive';
   lastLogin: string;
 }
@@ -70,6 +70,78 @@ const sampleUsers: User[] = [
     role: 'viewer',
     status: 'active',
     lastLogin: '2023-05-12 11:05'
+  },
+  {
+    id: 6,
+    username: 'zhang',
+    name: '小张',
+    email: 'zhang@foodmuseum.com',
+    role: 'registered',
+    status: 'active',
+    lastLogin: '2023-05-11 09:30'
+  },
+  {
+    id: 7,
+    username: 'zhao',
+    name: '小赵',
+    email: 'zhao@foodmuseum.com',
+    role: 'registered',
+    status: 'active',
+    lastLogin: '2023-05-10 13:45'
+  },
+  {
+    id: 8,
+    username: 'liu',
+    name: '小刘',
+    email: 'liu@foodmuseum.com',
+    role: 'editor',
+    status: 'inactive',
+    lastLogin: '2023-05-08 15:20'
+  },
+  {
+    id: 9,
+    username: 'chen',
+    name: '小陈',
+    email: 'chen@foodmuseum.com',
+    role: 'viewer',
+    status: 'active',
+    lastLogin: '2023-05-09 10:15'
+  },
+  {
+    id: 10,
+    username: 'wang',
+    name: '小汪',
+    email: 'wang@foodmuseum.com',
+    role: 'registered',
+    status: 'active',
+    lastLogin: '2023-05-12 08:40'
+  },
+  {
+    id: 11,
+    username: 'yang',
+    name: '小杨',
+    email: 'yang@example.com',
+    role: 'registered',
+    status: 'active',
+    lastLogin: '2023-05-16 09:25'
+  },
+  {
+    id: 12,
+    username: 'li',
+    name: '小李',
+    email: 'li@example.com',
+    role: 'registered',
+    status: 'active',
+    lastLogin: '2023-05-16 11:10'
+  },
+  {
+    id: 13,
+    username: 'wu',
+    name: '小吴',
+    email: 'wu@example.com',
+    role: 'registered',
+    status: 'inactive',
+    lastLogin: '2023-05-15 16:45'
   }
 ];
 
@@ -81,6 +153,10 @@ const AdminUsers: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
+  const [users, setUsers] = useState<User[]>(sampleUsers);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [selectedRole, setSelectedRole] = useState<string>('');
   
   const itemsPerPage = 10;
   
@@ -89,7 +165,8 @@ const AdminUsers: React.FC = () => {
     { value: '', label: '所有角色' },
     { value: 'admin', label: '管理员' },
     { value: 'editor', label: '编辑' },
-    { value: 'viewer', label: '访客' }
+    { value: 'viewer', label: '访客' },
+    { value: 'registered', label: '注册用户' }
   ];
   
   // 状态选项
@@ -115,7 +192,7 @@ const AdminUsers: React.FC = () => {
   }, []);
   
   // 根据筛选条件过滤用户
-  const filteredUsers = sampleUsers.filter(user => {
+  const filteredUsers = users.filter(user => {
     const matchesSearch = 
       searchTerm === '' || 
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -142,11 +219,31 @@ const AdminUsers: React.FC = () => {
   
   const handleDeleteConfirm = () => {
     if (userToDelete !== null) {
-      // 实际项目中这里应该调用API删除用户
-      console.log(`删除用户，ID: ${userToDelete}`);
+      // 从用户列表中移除用户
+      setUsers(users.filter(user => user.id !== userToDelete));
       showToast('用户已成功删除', 'success');
       setIsDeleteDialogOpen(false);
       setUserToDelete(null);
+    }
+  };
+  
+  const handleEditClick = (id: number) => {
+    const user = users.find(u => u.id === id);
+    if (user) {
+      setUserToEdit(user);
+      setSelectedRole(user.role);
+      setIsEditDialogOpen(true);
+    }
+  };
+  
+  const handleEditConfirm = () => {
+    if (userToEdit && selectedRole) {
+      setUsers(users.map(user => 
+        user.id === userToEdit.id ? { ...user, role: selectedRole as 'admin' | 'editor' | 'viewer' | 'registered' } : user
+      ));
+      showToast('用户角色已成功修改', 'success');
+      setIsEditDialogOpen(false);
+      setUserToEdit(null);
     }
   };
   
@@ -156,6 +253,7 @@ const AdminUsers: React.FC = () => {
       case 'admin': return '管理员';
       case 'editor': return '编辑';
       case 'viewer': return '访客';
+      case 'registered': return '注册用户';
       default: return '未知';
     }
   };
@@ -247,7 +345,7 @@ const AdminUsers: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <StatusBadge 
-                          status={user.role === 'admin' ? 'info' : user.role === 'editor' ? 'success' : 'default'} 
+                          status={user.role === 'admin' ? 'info' : user.role === 'editor' ? 'success' : user.role === 'viewer' ? 'default' : 'info'} 
                           text={getRoleLabel(user.role)} 
                         />
                       </td>
@@ -263,7 +361,7 @@ const AdminUsers: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <TableActionButtons
                           onView={() => console.log(`查看用户，ID: ${user.id}`)}
-                          onEdit={() => console.log(`编辑用户，ID: ${user.id}`)}
+                          onEdit={() => handleEditClick(user.id)}
                           onDelete={() => handleDeleteClick(user.id)}
                         />
                       </td>
@@ -295,6 +393,64 @@ const AdminUsers: React.FC = () => {
           onCancel={() => setIsDeleteDialogOpen(false)}
           variant="danger"
         />
+        
+        {userToEdit && (
+          <div className={`fixed inset-0 overflow-y-auto ${isEditDialogOpen ? 'block' : 'hidden'}`}>
+            <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+              <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+              </div>
+              
+              <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+              
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="sm:flex sm:items-start">
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                      <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                        修改用户角色
+                      </h3>
+                      <div className="mt-4">
+                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                          为用户 {userToEdit.name} 选择新角色
+                        </label>
+                        <select
+                          id="role"
+                          name="role"
+                          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md"
+                          value={selectedRole}
+                          onChange={(e) => setSelectedRole(e.target.value)}
+                        >
+                          {roleOptions.filter(option => option.value !== '').map(option => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <button
+                    type="button"
+                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    onClick={handleEditConfirm}
+                  >
+                    确认修改
+                  </button>
+                  <button
+                    type="button"
+                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    onClick={() => setIsEditDialogOpen(false)}
+                  >
+                    取消
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </AdminLayout>
   );
