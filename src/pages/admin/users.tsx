@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Head from 'next/head';
 import { 
   AdminLayout,
@@ -13,6 +13,7 @@ import {
   ConfirmDialog,
   useToast
 } from '@/components/admin';
+import { saveToLocalStorage, getFromLocalStorage } from '@/utils/localStorage';
 
 interface User {
   id: number;
@@ -23,6 +24,9 @@ interface User {
   status: 'active' | 'inactive';
   lastLogin: string;
 }
+
+// 存储用户数据的localStorage键名
+const USERS_STORAGE_KEY = 'foodmuseum_admin_users';
 
 // 示例用户数据
 const sampleUsers: User[] = [
@@ -153,10 +157,19 @@ const AdminUsers: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
-  const [users, setUsers] = useState<User[]>(sampleUsers);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
   const [selectedRole, setSelectedRole] = useState<string>('');
+  const [showSavedIndicator, setShowSavedIndicator] = useState(false);
+  
+  // 从localStorage获取用户数据，如果没有则使用示例数据
+  const [users, setUsers] = useState<User[]>(() => {
+    // 这个函数只会在组件首次渲染时执行一次
+    if (typeof window !== 'undefined') {
+      return getFromLocalStorage<User[]>(USERS_STORAGE_KEY, sampleUsers);
+    }
+    return sampleUsers;
+  });
   
   // 添加用户相关状态
   const [isAddUserDialogOpen, setIsAddUserDialogOpen] = useState(false);
@@ -173,6 +186,20 @@ const AdminUsers: React.FC = () => {
     role: 'registered',
     status: 'active'
   });
+  
+  // 当用户数据变化时，保存到localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      saveToLocalStorage(USERS_STORAGE_KEY, users);
+      // 显示保存指示器
+      setShowSavedIndicator(true);
+      // 2秒后隐藏
+      const timer = setTimeout(() => {
+        setShowSavedIndicator(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [users]);
   
   const itemsPerPage = 10;
   
@@ -237,6 +264,7 @@ const AdminUsers: React.FC = () => {
     if (userToDelete !== null) {
       // 从用户列表中移除用户
       setUsers(users.filter(user => user.id !== userToDelete));
+      // localStorage会通过useEffect自动更新
       showToast('用户已成功删除', 'success');
       setIsDeleteDialogOpen(false);
       setUserToDelete(null);
@@ -257,6 +285,7 @@ const AdminUsers: React.FC = () => {
       setUsers(users.map(user => 
         user.id === userToEdit.id ? { ...user, role: selectedRole as 'admin' | 'editor' | 'viewer' | 'registered' } : user
       ));
+      // localStorage会通过useEffect自动更新
       showToast('用户角色已成功修改', 'success');
       setIsEditDialogOpen(false);
       setUserToEdit(null);
@@ -303,7 +332,7 @@ const AdminUsers: React.FC = () => {
     }
     
     // 创建新用户
-    const maxId = Math.max(...users.map(user => user.id));
+    const maxId = users.length > 0 ? Math.max(...users.map(user => user.id)) : 0;
     const currentDate = new Date();
     const formattedDate = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')} ${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
     
@@ -317,7 +346,9 @@ const AdminUsers: React.FC = () => {
       lastLogin: formattedDate
     };
     
+    // 添加用户并更新状态
     setUsers([...users, userToAdd]);
+    // localStorage会通过useEffect自动更新
     showToast('用户添加成功', 'success');
     
     // 重置表单并关闭对话框
@@ -331,6 +362,81 @@ const AdminUsers: React.FC = () => {
     setIsAddUserDialogOpen(false);
   };
   
+  // 重置用户数据到默认状态
+  const handleResetUsersData = () => {
+    if (confirm("确定要重置用户数据吗？所有修改将丢失。")) {
+      setUsers(sampleUsers);
+      showToast('用户数据已重置', 'info');
+    }
+  };
+  
+  // 引用文件上传的隐藏input
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  
+  // 导出用户数据为JSON文件
+  const handleExportUsersData = () => {
+    try {
+      const dataStr = JSON.stringify(users, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      
+      const exportFileDefaultName = `foodmuseum_users_${new Date().toISOString().slice(0, 10)}.json`;
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+      
+      showToast('用户数据已导出', 'success');
+    } catch (error) {
+      console.error('导出数据失败:', error);
+      showToast('导出数据失败', 'error');
+    }
+  };
+  
+  // 触发文件选择对话框
+  const handleImportClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  
+  // 处理文件导入
+  const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const importedData = JSON.parse(content) as User[];
+        
+        // 验证导入的数据格式
+        if (!Array.isArray(importedData) || !importedData.every(item => 
+          typeof item.id === 'number' &&
+          typeof item.username === 'string' &&
+          typeof item.name === 'string' &&
+          typeof item.email === 'string'
+        )) {
+          throw new Error('数据格式不正确');
+        }
+        
+        setUsers(importedData);
+        showToast('用户数据已导入', 'success');
+      } catch (error) {
+        console.error('导入数据失败:', error);
+        showToast('导入数据失败，请检查文件格式', 'error');
+      }
+      
+      // 重置文件输入
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    };
+    
+    reader.readAsText(file);
+  };
+  
   return (
     <AdminLayout 
       title="用户管理" 
@@ -340,19 +446,73 @@ const AdminUsers: React.FC = () => {
         <title>用户管理 - 中国传统美食博物馆</title>
       </Head>
       
+      {/* 隐藏的文件输入 */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileImport}
+        accept=".json"
+        style={{ display: 'none' }}
+      />
+      
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">用户管理</h1>
-          <ActionButton
-            onClick={handleAddUserClick}
-            icon={
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-            }
-          >
-            添加用户
-          </ActionButton>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-gray-900">用户管理</h1>
+            {showSavedIndicator && (
+              <span className="text-sm bg-green-100 text-green-800 py-1 px-2 rounded flex items-center">
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                已保存到本地
+              </span>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <ActionButton
+              onClick={handleImportClick}
+              icon={
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+              }
+              variant="secondary"
+            >
+              导入
+            </ActionButton>
+            <ActionButton
+              onClick={handleExportUsersData}
+              icon={
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+              }
+              variant="secondary"
+            >
+              导出
+            </ActionButton>
+            <ActionButton
+              onClick={handleResetUsersData}
+              icon={
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              }
+              variant="secondary"
+            >
+              重置数据
+            </ActionButton>
+            <ActionButton
+              onClick={handleAddUserClick}
+              icon={
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              }
+            >
+              添加用户
+            </ActionButton>
+          </div>
         </div>
         
         <div className="bg-white shadow rounded-lg overflow-hidden mb-8">
